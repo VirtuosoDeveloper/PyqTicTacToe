@@ -37,7 +37,7 @@ class TicTacToe(QMainWindow):
         gameMenu.addAction(self.resetAction())
         settingsMenu = self.menuBar().addMenu('Settings')
         settingsMenu.addAction(self.setNameAction())
-        settingsMenu.addAction(self.TurnIndicatorToggle())
+        settingsMenu.addAction(self.turnIndicatorToggle())
 
     def resetAction(self):
         action = QAction('Reset', self)
@@ -98,7 +98,7 @@ class TicTacToe(QMainWindow):
         self.currentPlayer = self.oPlayer if self.currentPlayer is self.xPlayer else self.xPlayer
         self.updateIndicator()
 
-    def TurnIndicatorToggle(self):
+    def turnIndicatorToggle(self):
         action = QAction('Turn Indicator', self, checkable=True)
         action.setShortcut('Ctrl+T')
         action.setChecked(True)
@@ -130,8 +130,7 @@ class TicTacToeBoard(QWidget):
         self.game = parent
         layout = QGridLayout()
         self.setLayout(layout)
-        # TODO-Q: How to implement __mul__ so this works -> [TicTacToeCell(self) * 3] * 3
-        self.grid = [[TicTacToeCell(self), TicTacToeCell(self), TicTacToeCell(self)], [TicTacToeCell(self), TicTacToeCell(self), TicTacToeCell(self)], [TicTacToeCell(self), TicTacToeCell(self), TicTacToeCell(self)]]
+        self.grid = [[TicTacToeCell() for i in range(3)] for j in range(3)]
         positions = [(i, j) for i in range(3) for j in range(3)]
         for position in positions:
             x, y = position
@@ -140,7 +139,7 @@ class TicTacToeBoard(QWidget):
             button.clicked.connect(self.evaluateBoard)
             layout.addWidget(button, *position)
     
-    def reset(self):
+    def reset(self):    
         for row in self.grid:
             for cell in row:
                 cell.reset()
@@ -165,8 +164,8 @@ class TicTacToeBoard(QWidget):
 
 class TicTacToeCell(QPushButton):
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
         self.setMinimumSize(400, 400)
         self.text = ''
     
